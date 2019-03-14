@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using System.Linq.Expressions;
 using FlexLabs.EntityFrameworkCore.Upsert.Internal;
 using FlexLabs.EntityFrameworkCore.Upsert.Runners;
@@ -22,7 +23,8 @@ namespace FlexLabs.EntityFrameworkCore.Upsert.Tests.Runners
                 ( "Status", new ConstantValue("status") { ArgumentIndex = 1} ),
             };
 
-            var generatedSql = runner.GenerateCommand(tableName, new[] { entity }, new[] { ("ID", false) }, null);
+            //TODO:
+            var generatedSql = runner.GenerateCommand(tableName, IsolationLevel.ReadCommitted, new[] { entity }, new[] { ("ID", false) }, null);
 
             Assert.Equal(NoUpdate_Sql, generatedSql);
         }
@@ -39,7 +41,8 @@ namespace FlexLabs.EntityFrameworkCore.Upsert.Tests.Runners
                 ( "Status", new ConstantValue("status") { ArgumentIndex = 1} ),
             };
 
-            var generatedSql = runner.GenerateCommand(tableName, new[] { entity }, new[] { ("ID1", false), ("ID2", true) }, null);
+            //TODO:
+            var generatedSql = runner.GenerateCommand(tableName, IsolationLevel.ReadCommitted, new[] { entity }, new[] { ("ID1", false), ("ID2", true) }, null);
 
             Assert.Equal(NoUpdate_WithNullable_Sql, generatedSql);
         }
@@ -60,7 +63,8 @@ namespace FlexLabs.EntityFrameworkCore.Upsert.Tests.Runners
                 ("Name", new KnownExpression(ExpressionType.Constant, new ConstantValue("newValue") { ArgumentIndex = 2 }))
             };
 
-            var generatedSql = runner.GenerateCommand(tableName, new[] { entity }, new[] { ("ID", false) }, updates);
+            //TODO:
+            var generatedSql = runner.GenerateCommand(tableName, IsolationLevel.ReadCommitted, new[] { entity }, new[] { ("ID", false) }, updates);
 
             Assert.Equal(Update_Constant_Sql, generatedSql);
         }
@@ -81,7 +85,8 @@ namespace FlexLabs.EntityFrameworkCore.Upsert.Tests.Runners
                 ("Name", new KnownExpression(ExpressionType.MemberAccess, new ParameterProperty("Name", false) { Property = new MockProperty("Name") }))
             };
 
-            var generatedSql = runner.GenerateCommand(tableName, new[] { entity }, new[] { ("ID", false) }, updates);
+            //TODO:
+            var generatedSql = runner.GenerateCommand(tableName, IsolationLevel.ReadCommitted, new[] { entity }, new[] { ("ID", false) }, updates);
 
             Assert.Equal(Update_Source_Sql, generatedSql);
         }
@@ -102,7 +107,8 @@ namespace FlexLabs.EntityFrameworkCore.Upsert.Tests.Runners
                 ("Name", new KnownExpression(ExpressionType.MemberAccess, new ParameterProperty("Name", false) { Property = new MockProperty("Name2") }))
             };
 
-            var generatedSql = runner.GenerateCommand(tableName, new[] { entity }, new[] { ("ID", false) }, updates);
+            //TODO:
+            var generatedSql = runner.GenerateCommand(tableName, IsolationLevel.ReadCommitted, new[] { entity }, new[] { ("ID", false) }, updates);
 
             Assert.Equal(Update_Source_RenamedCol_Sql, generatedSql);
         }
@@ -125,7 +131,8 @@ namespace FlexLabs.EntityFrameworkCore.Upsert.Tests.Runners
                     new ConstantValue(1) { ArgumentIndex = 2 }))
             };
 
-            var generatedSql = runner.GenerateCommand(tableName, new[] { entity }, new[] { ("ID", false) }, updates);
+            //TODO:
+            var generatedSql = runner.GenerateCommand(tableName, IsolationLevel.ReadCommitted, new[] { entity }, new[] { ("ID", false) }, updates);
 
             Assert.Equal(Update_BinaryAdd_Sql, generatedSql);
         }
@@ -148,7 +155,8 @@ namespace FlexLabs.EntityFrameworkCore.Upsert.Tests.Runners
                     new ConstantValue(1) { ArgumentIndex = 2 }))
             };
 
-            var generatedSql = runner.GenerateCommand(tableName, new[] { entity }, new[] { ("ID", false) }, updates);
+            //TODO:
+            var generatedSql = runner.GenerateCommand(tableName, IsolationLevel.ReadCommitted, new[] { entity }, new[] { ("ID", false) }, updates);
 
             Assert.Equal(Update_Coalesce_Sql, generatedSql);
         }

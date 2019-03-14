@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using FlexLabs.EntityFrameworkCore.Upsert.Internal;
@@ -20,11 +21,11 @@ namespace FlexLabs.EntityFrameworkCore.Upsert.Runners
         protected override string TargetPrefix => "[T].";
 
         /// <inheritdoc/>
-        public override string GenerateCommand(string tableName, ICollection<ICollection<(string ColumnName, ConstantValue Value)>> entities,
+        public override string GenerateCommand(string tableName, IsolationLevel isolationLevel, ICollection<ICollection<(string ColumnName, ConstantValue Value)>> entities,
             ICollection<(string ColumnName, bool IsNullable)> joinColumns, ICollection<(string ColumnName, KnownExpression Value)> updateExpressions)
         {
             var result = new StringBuilder();
-            result.Append($"MERGE INTO {tableName} WITH (HOLDLOCK) AS [T] USING ( VALUES (");
+            result.Append($"MERGE INTO {tableName} WITH ({isolationLevel.ToString().ToUpper()}) AS [T] USING ( VALUES (");
             result.Append(string.Join("), (", entities.Select(ec => string.Join(", ", ec.Select(e => Parameter(e.Value.ArgumentIndex))))));
             result.Append($") ) AS [S] (");
             result.Append(string.Join(", ", entities.First().Select(e => EscapeName(e.ColumnName))));

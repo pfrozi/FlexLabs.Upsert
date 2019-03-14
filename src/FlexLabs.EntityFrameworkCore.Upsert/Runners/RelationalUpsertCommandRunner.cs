@@ -23,11 +23,12 @@ namespace FlexLabs.EntityFrameworkCore.Upsert.Runners
         /// Generate a full command for the opsert operation, given the inputs passed
         /// </summary>
         /// <param name="tableName">The name of the database table</param>
+        /// <param name="isolationLevel">Table hint to be used on merge command</param>
         /// <param name="entities">A collection of entity data (column names and values) to be upserted</param>
         /// <param name="joinColumns">The columns used to match existing items in the database</param>
         /// <param name="updateExpressions">The expressions that represent update commands for matched entities</param>
         /// <returns>A fully formed database query</returns>
-        public abstract string GenerateCommand(string tableName, ICollection<ICollection<(string ColumnName, ConstantValue Value)>> entities,
+        public abstract string GenerateCommand(string tableName, IsolationLevel isolationLevel, ICollection<ICollection<(string ColumnName, ConstantValue Value)>> entities,
             ICollection<(string ColumnName, bool IsNullable)> joinColumns, ICollection<(string ColumnName, KnownExpression Value)> updateExpressions);
         /// <summary>
         /// Escape the name of the table/column/schema in a given database language
@@ -145,7 +146,7 @@ namespace FlexLabs.EntityFrameworkCore.Upsert.Runners
             var columnUpdateExpressions = updateExpressions?.Count > 0
                 ? updateExpressions.Select(x => (x.Property.Relational().ColumnName, x.Value)).ToArray()
                 : null;
-            var sqlCommand = GenerateCommand(GetTableName(entityType), newEntities, joinColumnNames, columnUpdateExpressions);
+            var sqlCommand = GenerateCommand(GetTableName(entityType), IsolationLevel.ReadCommitted, newEntities, joinColumnNames, columnUpdateExpressions);
             return (sqlCommand, arguments);
         }
 
